@@ -62,7 +62,7 @@ def update_screen(ai_settings, screen, ship, aliens, bullets):
     pygame.display.flip()
 
 
-def update_bullets(bullets):
+def update_bullets(bullets, aliens):
     """Update the position of bullets and get rid of old bullets"""
     # Update the bullet position
     bullets.update()    #because bullets is a group of bullet this will call bullet.update() several times
@@ -71,6 +71,16 @@ def update_bullets(bullets):
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
+
+    #check for any bullets that have hit aliens
+    #if so, gt rid of the bullet and the alien
+
+    #pygame.sprite.groupcollide() will detect thee collision between members of two groups
+    #returns a dictionary with keys as bullets and corresponding value is the alien that was hit
+    #loops through each bullet and then each alien when an alien is hit, it adds a key-value pair to the dictionary
+    #True, True tells the program to remove the bullet and the alien when they collide
+    collisions = pygame.sprite.groupcollide(bullets, aliens, True, True)
+
 
 
 def get_number_aliens_x(ai_settings, alien_width):
