@@ -3,6 +3,7 @@ from settings import Settings
 from ship import Ship 
 import game_functions as gf
 from pygame.sprite import Group
+from game_stats import GameStats
 
 def run_game():
     #Initialize game and create a screen object
@@ -14,6 +15,9 @@ def run_game():
 
     # A surface in Pygame is where a game element is displayed
     pygame.display.set_caption("Alien Invasion")
+
+    #Create an instance to store game statistics
+    stats = GameStats(my_settings)
 
     # Make a ship
     ship = Ship(my_settings, screen)
@@ -31,9 +35,11 @@ def run_game():
 
     while True:
         gf.check_events(my_settings, screen, ship, bullets)
-        ship.update()
-        gf.update_bullets(bullets, aliens)
-        gf.update_aliens(my_settings, aliens)
+        if stats.game_active:
+            ship.update()
+            gf.update_bullets(bullets, aliens, screen, ship, my_settings)
+            gf.update_aliens(my_settings, aliens, ship, stats, screen, bullets)
+        
         gf.update_screen(my_settings, screen, ship, aliens, bullets)
 
 run_game()
